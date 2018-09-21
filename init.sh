@@ -18,6 +18,12 @@ function extractUrl() {
   echo $PARSED_URL
 }
 
+# Sets the environment variable SHOULD_BUILD if 
+# 
+# It's flagged to build via BUILD_ME
+# It's not a pull request
+# It's the master branch OR it's a tagged build
+#
 function shouldBuild() {
   if [[ $BUILD_ME -eq 1 && \
     $ABSTRUSE_PULL_REQUEST = "false" && \
@@ -27,6 +33,11 @@ function shouldBuild() {
   fi
 }
 
+# Sets the environment variable SHOULD_DEPLOY if 
+# 
+# It's not a pull request
+# It's the master branch OR it's a tagged build
+#
 function shouldDeploy() {
   if [[ $ABSTRUSE_PULL_REQUEST = "false" && \
     ($ABSTRUSE_BRANCH = "master" || \
@@ -41,6 +52,8 @@ if [ -d /home/abstruse/.gvm ]; then
   export GOPATH=/home/abstruse/go
 fi
 
+# Uses the github remote to 'discover' the GOPATH location for this code
+# and links it there so the build works. 
 if [ -d /home/abstruse/build/.git ]; then
   export PROJECT_PATH=/home/abstruse/go/src/`extractUrl $(git remote get-url origin)`
 

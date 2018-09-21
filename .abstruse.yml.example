@@ -1,0 +1,30 @@
+# The name of your build image
+image: gvm_builder 
+
+matrix:
+  - env: GO_VERSION=1.9
+  - env: GO_VERSION=1.10
+  - env: GO_VERSION=1.11 GO111MODULE=on BUILD_ME=1 # BUILD_ME causes the $SHOULD_BUILD variable to be set
+
+# This keeps the downloaded Go version in the cache, saving future build time.
+cache:
+  - /home/abstruse/.gvm/versions
+
+before_install:
+  - gvm install $GO_VERSION
+
+# Don't install some things if it's a go module based build.
+install:
+  - if [[ -z $GO111MODULE ]]; then go get github.com/onsi/ginkgo/ginkgo; fi
+  - if [[ -z $GO111MODULE ]]; then go get github.com/onsi/gomega/...; fi
+  - go get ./...
+
+script:
+  - go test -v ./...
+  - if [[ $SHOULD_BUILD ]]; then docker build -f Dockerfile -t cooperaj/starling-coinjar:latest .; fi
+
+# In this instance we only want to deploy the master branch or a tag. 
+deploy:
+  - if [[ $SHOULD_DEPLOY ]]; then docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD; fi
+  - if [[ $SHOULD_DEPLOY ]]; then docker push cooperaj/starling-coinjar:latest; fi
+  - if [[ $SHOULD_DEPLOY ]] && [[ $ABSTRUSE_TAG != "null" ]]; then docker push cooperaj/starling-coinjar:${ABSTRUSE_TAG}; fi
