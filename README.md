@@ -3,7 +3,7 @@ Abstruse Golang Builder using GVM
 
 This repo contains a Dockerfile and init.sh script that can be used to build golang projects using the [Abstruse](https://github.com/bleenco/abstruse) continuous integration service.
 
-The usage of GVM allows you to select a golang version for your project to be built again. 
+The usage of GVM allows you to select a golang version for your project to be built against. 
 
 ### Features
   * The image produced is able to build Go 1.11 code using Go modules. Specify an `env` value of `GO111MODULE=on` to do this.
