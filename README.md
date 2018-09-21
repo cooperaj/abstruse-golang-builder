@@ -7,7 +7,7 @@ The usage of GVM allows you to select a golang version for your project to be bu
 
 ### Features
   * The image produced is able to build Go 1.11 code using Go modules. Specify an `env` value of `GO111MODULE=on` to do this.
-  * The image will populate two environment variables `$SHOULD_BUILD` and `$SHOULD_DEPOLOY` based on the following:
+  * The image will populate two environment variables `$SHOULD_BUILD` and `$SHOULD_DEPLOY` based on the following:
     1. The environment variable `BUILD_ME` being set to `1`
     2. The branch of the build being `master` or a tagged build e.g. `refs/tags/v1`
     
